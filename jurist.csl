@@ -1,0 +1,1242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0.2" default-locale="en-US" page-range-format="chicago" demote-non-dropping-particle="sort-only">
+  <!--
+    The Jurist (Catholic University of America, School of Canon Law)
+    Built FRESH from:
+      - CUA Style Guide – The Jurist – 2021 (primary)
+      - School of Canon Law Style Manual (CUA, 2019) for gaps
+      - Daniel, The Jurist 81 (2025) 227–274 (published practice)
+    NOT a fork of studia-canonica.csl (contrast only).
+
+    Layout vs Studia/USP:
+      - Full given + family in notes (no small-caps surnames)
+      - en-US dates: Month day, year
+      - Journal: no "in"; Title in quotes; Vol (Year) pages
+      - Chapter: "in" + ed. Name(s) before imprint
+      - Book/chapter imprint in parentheses: (City: Publisher, Year) pages
+      - Bare pages (no p./pp.); volume:page with no spaces (2:776)
+      - Eccles docs: Authority, form, Incipit, date: AAS vol (year) pages
+
+    Extra keys (library already uses; Jurist layout):
+      citation-label (rich-text STEM italics; /YEAR only when stored, e.g. CIC/1917, SST/2001; CIC 1983 & CCEO bare), original-date (AAS/reporter year),
+      chair, publisher / publisher-place / event-date / secondary-editor (secondary book imprint),
+      status (manuscript|classical|magisterium|ecclesiastical|civil),
+      genre, authority, number, medium, jurisdiction, note, container-title, reviewed-title (mag subtitle after italic title),
+      references (linking text ONLY — no titles/pages/CLD prose),
+      original-title (secondary book title), chapter-number (secondary pages when page busy),
+      collection-title / collection-number (secondary periodical when AAS owns container),
+      issue (Extra issue: → CSL issue for non-continuous reporter pagination; NOT number —
+        number is docketNumber / prot. n.)
+  -->
+  <info>
+    <title>The Jurist (CUA)</title>
+    <title-short>Jurist</title-short>
+    <id>http://www.zotero.org/styles/the-jurist</id>
+    <link href="http://www.zotero.org/styles/the-jurist" rel="self"/>
+    <link href="https://canonlaw.cua.edu/" rel="documentation"/>
+    <author>
+      <name>Brian T. Austin</name>
+    </author>
+    <category citation-format="note"/>
+    <category field="law"/>
+    <category field="theology"/>
+    <issn>0022-6858</issn>
+    <summary>Note style for The Jurist and CUA School of Canon Law. Full names, US dates, parenthetical imprint, bare pages. CSL 1.0.2.</summary>
+    <updated>2026-09-29T17:00:00+00:00</updated>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
+  </info>
+
+  <locale xml:lang="en-US">
+    <style-options punctuation-in-quote="true"/>
+    <date form="text">
+      <date-part name="month" suffix=" "/>
+      <date-part name="day" suffix=", "/>
+      <date-part name="year"/>
+    </date>
+    <terms>
+      <term name="editor" form="short">
+        <single>ed.</single>
+        <multiple>eds.</multiple>
+      </term>
+      <term name="editor" form="verb-short">ed.</term>
+      <term name="translator" form="short">
+        <single>trans.</single>
+        <multiple>trans.</multiple>
+      </term>
+      <term name="translator" form="verb-short">trans.</term>
+      <term name="ibid">ibid.</term>
+      <term name="presented at">unpublished paper presented at</term>
+      <term name="page" form="short">
+        <single></single>
+        <multiple></multiple>
+      </term>
+      <term name="article" form="short">
+        <single>art.</single>
+        <multiple>arts.</multiple>
+      </term>
+      <term name="number" form="short">
+        <single>no.</single>
+        <multiple>nos.</multiple>
+      </term>
+      <term name="issue" form="short">
+        <single>no.</single>
+        <multiple>nos.</multiple>
+      </term>
+      <term name="canon" form="short">
+        <single>c.</single>
+        <multiple>cc.</multiple>
+      </term>
+    </terms>
+  </locale>
+
+  <!-- ========== NAMES ========== -->
+  <macro name="author-note">
+    <names variable="author">
+      <name and="text" delimiter=", " delimiter-precedes-last="never"/>
+      <label form="short" prefix=", "/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+        <text macro="title-note"/>
+      </substitute>
+    </names>
+  </macro>
+
+  <macro name="author-bib">
+    <names variable="author">
+      <name name-as-sort-order="first" and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="never"/>
+      <label form="short" prefix=", "/>
+      <substitute>
+        <names variable="editor">
+          <name name-as-sort-order="first" and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="never"/>
+          <label form="short" prefix=", "/>
+        </names>
+        <names variable="translator"/>
+        <text macro="title-bib"/>
+      </substitute>
+    </names>
+  </macro>
+
+  <macro name="author-short">
+    <names variable="author">
+      <name form="short" and="text" delimiter=", "/>
+      <substitute>
+        <names variable="editor">
+          <name form="short" and="text" delimiter=", "/>
+        </names>
+        <text variable="citation-label"/>
+        <text variable="title" form="short"/>
+      </substitute>
+    </names>
+  </macro>
+
+  <macro name="editor-note">
+    <!-- Jurist/CUA notes: ed./eds. First Last … before imprint (eds. when plural) -->
+    <names variable="editor">
+      <label form="short" suffix=" "/>
+      <name and="text" delimiter=", " delimiter-precedes-last="never"/>
+    </names>
+  </macro>
+
+  <macro name="translator-note">
+    <names variable="translator">
+      <label form="short" suffix=" "/>
+      <name and="text" delimiter=", " delimiter-precedes-last="never"/>
+    </names>
+  </macro>
+
+  <macro name="editor-bib">
+    <names variable="editor">
+      <label form="verb" suffix=" "/>
+      <name and="text" delimiter=", " delimiter-precedes-last="never"/>
+    </names>
+  </macro>
+
+  <macro name="ponens">
+    <!-- Extra chair: (Zotero→CSL name) or contributor = ponens → italic "c." + Surname.
+         citeproc-js/Zotero supports chair; keep contributor as portable fallback. -->
+    <choose>
+      <if variable="chair">
+        <group delimiter=" ">
+          <text value="c." font-style="italic"/>
+          <names variable="chair">
+            <name form="short"/>
+          </names>
+        </group>
+      </if>
+      <else-if variable="contributor">
+        <group delimiter=" ">
+          <text value="c." font-style="italic"/>
+          <names variable="contributor">
+            <name form="short"/>
+          </names>
+        </group>
+      </else-if>
+    </choose>
+  </macro>
+
+  <!-- ========== TITLES ========== -->
+  <macro name="title-note">
+    <choose>
+      <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+        <text variable="title" font-style="italic"/>
+      </if>
+      <else-if type="chapter paper-conference article-journal article-magazine article-newspaper entry-encyclopedia entry-dictionary thesis manuscript speech" match="any">
+        <text variable="title" quotes="true"/>
+      </else-if>
+      <else>
+        <text variable="title" quotes="true"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- Quoted title with following comma (punctuation-in-quote → comma inside quotes) -->
+  <macro name="title-note-comma">
+    <choose>
+      <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+        <text variable="title" font-style="italic" suffix=","/>
+      </if>
+      <else>
+        <text variable="title" quotes="true" suffix=","/>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="title-bib">
+    <choose>
+      <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+        <text variable="title" font-style="italic"/>
+      </if>
+      <else>
+        <text variable="title" quotes="true"/>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="title-short">
+    <choose>
+      <if variable="citation-label">
+        <text variable="citation-label"/>
+      </if>
+      <else-if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+        <text variable="title" form="short" font-style="italic"/>
+      </else-if>
+      <else>
+        <text variable="title" form="short" quotes="true"/>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="container-title">
+    <text variable="container-title" font-style="italic"/>
+  </macro>
+
+  <macro name="collection">
+    <group delimiter=" ">
+      <text variable="collection-title"/>
+      <text variable="collection-number"/>
+    </group>
+  </macro>
+
+  <!-- ========== DATES ========== -->
+  <macro name="date-text">
+    <date variable="issued" form="text"/>
+  </macro>
+
+  <macro name="year-date">
+    <choose>
+      <if variable="original-date">
+        <date variable="original-date">
+          <date-part name="year"/>
+        </date>
+      </if>
+      <else>
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="issued-year">
+    <date variable="issued">
+      <date-part name="year"/>
+    </date>
+  </macro>
+
+  <!-- ========== IMPRINT ========== -->
+  <macro name="publisher">
+    <choose>
+      <if variable="publisher-place publisher" match="any">
+        <group delimiter=": ">
+          <text variable="publisher-place"/>
+          <text variable="publisher"/>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <macro name="imprint-paren">
+    <!-- (City: Publisher, Year) -->
+    <group prefix=" (" suffix=")">
+      <group delimiter=", ">
+        <text macro="publisher"/>
+        <text macro="issued-year"/>
+      </group>
+    </group>
+  </macro>
+
+  <macro name="edition">
+    <choose>
+      <if is-numeric="edition">
+        <group delimiter=" ">
+          <number variable="edition" form="ordinal"/>
+          <text term="edition" form="short"/>
+        </group>
+      </if>
+      <else>
+        <text variable="edition"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- ========== LOCATORS ========== -->
+  <!-- Locator label (art./no./…) for non-page CSL labels; suppress p./pp. only.
+       Word "art. 1" → label=article + locator=1. Codes keep "c. …" typed (c. is not a CSL label). -->
+  <macro name="locator-label-only">
+    <choose>
+      <if variable="locator">
+        <group delimiter=" ">
+          <choose>
+            <if locator="page" match="none">
+              <label variable="locator" form="short"/>
+            </if>
+          </choose>
+          <text variable="locator"/>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <macro name="point-locators">
+    <!-- Prefer cite locator (+ non-page label); else item page. No p./pp.
+         Classical Corpus (Extra status on chapter/book): bare locator — never volume:.
+         Chapter multi-vol item pages: volume:page with no spaces. -->
+    <choose>
+      <if variable="locator">
+        <choose>
+          <if type="chapter paper-conference" match="any">
+            <choose>
+              <if variable="status">
+                <text variable="locator"/>
+              </if>
+              <else>
+                <group delimiter=":">
+                  <text variable="volume"/>
+                  <text macro="locator-label-only"/>
+                </group>
+              </else>
+            </choose>
+          </if>
+          <else>
+            <text macro="locator-label-only"/>
+          </else>
+        </choose>
+      </if>
+      <else-if variable="page">
+        <choose>
+          <if type="chapter paper-conference" match="any">
+            <choose>
+              <if variable="status">
+                <text variable="page"/>
+              </if>
+              <else>
+                <group delimiter=":">
+                  <text variable="volume"/>
+                  <text variable="page"/>
+                </group>
+              </else>
+            </choose>
+          </if>
+          <else>
+            <text variable="page"/>
+          </else>
+        </choose>
+      </else-if>
+    </choose>
+  </macro>
+
+  <macro name="locators-journal">
+    <group delimiter=" ">
+      <text variable="volume"/>
+      <group prefix="(" suffix=")">
+        <choose>
+          <if variable="original-date">
+            <date variable="original-date">
+              <date-part name="year"/>
+            </date>
+          </if>
+          <else-if variable="issued">
+            <choose>
+              <if is-numeric="issued">
+                <date variable="issued">
+                  <date-part name="year"/>
+                </date>
+              </if>
+              <else>
+                <!-- e.g. December 1995 in newsletter fascicles -->
+                <date variable="issued" form="text"/>
+              </else>
+            </choose>
+          </else-if>
+        </choose>
+      </group>
+      <text macro="point-locators"/>
+    </group>
+  </macro>
+
+  <macro name="hereafter">
+    <!-- Do NOT wrap citation-label in font-style="italic": Extra already carries
+         rich-text <i>…</i> (Decretum Gratiani, Dig., SST/YEAR). Outer italic inverts. -->
+    <choose>
+      <if variable="citation-label" position="first">
+        <group prefix=" (" suffix=")">
+          <text value="hereafter"/>
+          <text variable="citation-label" prefix=" "/>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- ========== FIRST-CITE MACROS BY TYPE ========== -->
+  <macro name="article-first">
+    <group delimiter=" ">
+      <group delimiter=", ">
+        <text macro="author-note"/>
+        <text macro="title-note-comma"/>
+      </group>
+      <text macro="container-title"/>
+      <text macro="locators-journal"/>
+    </group>
+    <text macro="hereafter"/>
+  </macro>
+
+  <macro name="chapter-first">
+    <group delimiter=", ">
+      <text macro="author-note"/>
+      <text macro="title-note-comma"/>
+    </group>
+    <text value=" in "/>
+    <group delimiter=", ">
+      <text macro="container-title"/>
+      <text macro="collection"/>
+      <text macro="editor-note"/>
+      <text macro="translator-note"/>
+    </group>
+    <text macro="imprint-paren"/>
+    <text macro="point-locators" prefix=" "/>
+    <text macro="hereafter"/>
+  </macro>
+
+  <macro name="book-first">
+    <!-- editor-note only when author present; else author-note already substituted eds. -->
+    <group delimiter=", ">
+      <text macro="author-note"/>
+      <text macro="title-note"/>
+      <text macro="collection"/>
+      <text macro="edition"/>
+      <choose>
+        <if variable="author">
+          <text macro="editor-note"/>
+          <text macro="translator-note"/>
+        </if>
+      </choose>
+    </group>
+    <text macro="imprint-paren"/>
+    <text macro="point-locators" prefix=" "/>
+    <text macro="hereafter"/>
+  </macro>
+
+  <macro name="thesis-first">
+    <!-- Unpublished thesis/diss.: Author, *Title* (Genre, University, Year) pages.
+         Do NOT route on publisher-place — Zotero maps university→publisher / place→publisher-place,
+         which wrongly triggered book-first (quoted title, no genre). Italic title per stored genre
+         (JCD Thesis). CUA §20.2 paren form (Genre, University, Year); place omitted. -->
+    <group delimiter=", ">
+      <text macro="author-note"/>
+      <text variable="title" font-style="italic"/>
+    </group>
+    <group prefix=" (" suffix=")">
+      <group delimiter=", ">
+        <text variable="genre"/>
+        <text variable="publisher"/>
+        <text macro="issued-year"/>
+      </group>
+    </group>
+    <text macro="point-locators" prefix=" "/>
+  </macro>
+
+
+  <macro name="periodical-jurist">
+    <!-- CUA-ish periodical: Title vol (year) pages — spaces, no leading "in". -->
+    <group delimiter=" ">
+      <text variable="container-title" font-style="italic"/>
+      <text variable="volume"/>
+      <group prefix="(" suffix=")">
+        <text macro="year-date"/>
+      </group>
+      <text variable="page"/>
+    </group>
+  </macro>
+
+  <macro name="periodical-jurist-collection">
+    <!-- Secondary periodical when AAS/primary already owns container-title. -->
+    <group delimiter=" ">
+      <text variable="collection-title" font-style="italic"/>
+      <text variable="collection-number"/>
+      <choose>
+        <if variable="event-date">
+          <date variable="event-date" prefix="(" suffix=")">
+            <date-part name="year"/>
+          </date>
+        </if>
+      </choose>
+      <text variable="chapter-number"/>
+    </group>
+  </macro>
+
+  <macro name="secondary-imprint">
+    <!-- After primary cite. Extra convention (2026-09-28): references = linking
+         text ONLY (no hard-coded title/pages prose).
+         Jurist/CUA/Daniel: linking + *original-title*, ed. secondary-editor
+               (place: publisher, year) pages
+         — ed. Name BEFORE imprint paren (NOT invented (ed. Name) after title).
+         Periodical (AAS busy): linking + collection-title [vol] [pages].
+         Periodical (container free, e.g. Verbi→CLD) is rendered in manuscript-first. -->
+    <choose>
+      <if variable="original-title">
+        <group prefix=", ">
+          <group delimiter=" ">
+            <text variable="references"/>
+            <text variable="original-title" font-style="italic"/>
+          </group>
+          <choose>
+            <if variable="secondary-editor">
+              <!-- Jurist §7 / CUA §16: ", ed. Name" (eds. via names var elsewhere;
+                   Extra secondary-editor is plain text — always ed.) -->
+              <text variable="secondary-editor" prefix=", ed. "/>
+            </if>
+          </choose>
+          <choose>
+            <if variable="publisher publisher-place" match="any">
+              <group prefix=" (" suffix=")">
+                <group delimiter=", ">
+                  <group delimiter=": ">
+                    <text variable="publisher-place"/>
+                    <text variable="publisher"/>
+                  </group>
+                  <choose>
+                    <if variable="event-date">
+                      <date variable="event-date">
+                        <date-part name="year"/>
+                      </date>
+                    </if>
+                  </choose>
+                </group>
+              </group>
+            </if>
+          </choose>
+          <choose>
+            <if variable="chapter-number">
+              <choose>
+                <if variable="collection-number">
+                  <group prefix=" " delimiter=":">
+                    <text variable="collection-number"/>
+                    <text variable="chapter-number"/>
+                  </group>
+                </if>
+                <else>
+                  <text variable="chapter-number" prefix=" "/>
+                </else>
+              </choose>
+            </if>
+            <else-if variable="page">
+              <choose>
+                <if variable="container-title">
+                  <!-- page already printed on primary AAS/serial -->
+                </if>
+                <else-if variable="collection-number">
+                  <group prefix=" " delimiter=":">
+                    <text variable="collection-number"/>
+                    <text variable="page"/>
+                  </group>
+                </else-if>
+                <else>
+                  <text variable="page" prefix=" "/>
+                </else>
+              </choose>
+            </else-if>
+          </choose>
+        </group>
+      </if>
+      <else-if variable="collection-title">
+        <group prefix=", ">
+          <group delimiter=" ">
+            <text variable="references"/>
+            <text macro="periodical-jurist-collection"/>
+          </group>
+        </group>
+      </else-if>
+    </choose>
+  </macro>
+
+  <macro name="manuscript-first">
+    <!-- Eccles docs / codes / magisterium (CUA §10).
+         Note: Author, genre (lowercase), *incipit* [internal no.], Date: *AAS* vol (year) [pages].
+         AAS / primary serial: colon + periodical-jurist.
+         Secondary periodical owning container (Verbi→CLD): comma + linking + periodical-jurist.
+         Booklet / publisher path: (City: Publisher, Year) then locator — not inside title group.
+         Secondary book/collection: secondary-imprint (structured Extra; no prose in references). -->
+    <group delimiter=", ">
+      <choose>
+        <if variable="authority">
+          <text variable="authority"/>
+        </if>
+        <else-if variable="author">
+          <names variable="author">
+            <name and="text" delimiter=", " delimiter-precedes-last="never"/>
+          </names>
+        </else-if>
+      </choose>
+      <group delimiter=" ">
+        <text variable="genre" text-case="lowercase"/>
+        <text variable="title" font-style="italic"/>
+        <!-- Extra reviewed-title: English/Latin subtitle after italic incipit (Studia parity). -->
+        <text variable="reviewed-title"/>
+        <!-- locator after title only for serial/AAS path; require locator so page does not leak -->
+        <choose>
+          <if variable="container-title">
+            <choose>
+              <if variable="locator">
+                <text macro="point-locators"/>
+              </if>
+            </choose>
+          </if>
+        </choose>
+      </group>
+      <choose>
+        <if variable="container-title">
+          <text macro="date-text"/>
+        </if>
+        <else-if variable="original-title">
+          <text macro="date-text"/>
+        </else-if>
+      </choose>
+    </group>
+    <choose>
+      <if variable="container-title">
+        <choose>
+          <!-- Container-free secondary periodical (Verbi): linking + CUA periodical, comma not colon -->
+          <if variable="references">
+            <choose>
+              <if variable="original-title collection-title" match="none">
+                <group prefix=", ">
+                  <group delimiter=" ">
+                    <text variable="references"/>
+                    <text macro="periodical-jurist"/>
+                  </group>
+                </group>
+              </if>
+              <else>
+                <group delimiter=" " prefix=": ">
+                  <text macro="periodical-jurist"/>
+                </group>
+              </else>
+            </choose>
+          </if>
+          <else>
+            <group delimiter=" " prefix=": ">
+              <text macro="periodical-jurist"/>
+            </group>
+          </else>
+        </choose>
+      </if>
+      <else-if variable="original-title">
+        <!-- Secondary book only (no AAS): imprint via secondary-imprint -->
+      </else-if>
+      <else-if variable="publisher publisher-place" match="any">
+        <text macro="imprint-paren"/>
+        <text macro="point-locators" prefix=" "/>
+      </else-if>
+      <else>
+        <text macro="date-text" prefix=", "/>
+        <text macro="point-locators" prefix=" "/>
+      </else>
+    </choose>
+    <text macro="secondary-imprint"/>
+    <text macro="hereafter"/>
+  </macro>
+
+  <macro name="case-first">
+    <!-- Civil (caseName/title present): Case Name, vol Reporter page (year).
+         Eccles (no caseName): Tribunal…, act *c.* Ponens, *Place*, *Cause*, Date: Reporter…
+         Keep Latin names as stored. status:civil vs ecclesiastical is Extra; title presence distinguishes. -->
+    <choose>
+      <if variable="title">
+        <group delimiter=", ">
+          <text variable="title"/>
+          <group delimiter=" ">
+            <text variable="volume"/>
+            <text variable="container-title"/>
+            <text variable="page"/>
+          </group>
+        </group>
+        <group prefix=" (" suffix=")">
+          <date variable="issued">
+            <date-part name="year"/>
+          </date>
+        </group>
+      </if>
+      <else>
+        <group delimiter=", ">
+          <choose>
+            <if variable="authority">
+              <text variable="authority"/>
+            </if>
+            <else>
+              <names variable="author">
+                <name and="text" delimiter=", "/>
+              </names>
+            </else>
+          </choose>
+          <group delimiter=" ">
+            <text variable="medium" text-case="lowercase"/>
+            <text macro="ponens"/>
+          </group>
+          <text variable="jurisdiction" font-style="italic"/>
+          <text variable="genre" font-style="italic"/>
+          <choose>
+            <if variable="number">
+              <group delimiter=" ">
+                <text value="prot. n."/>
+                <text variable="number"/>
+              </group>
+            </if>
+          </choose>
+          <text macro="date-text"/>
+        </group>
+        <choose>
+          <if variable="container-title">
+            <!-- CUA §14.1 RRDec: vol:pages when no original-date and no Extra issue.
+                 §14.3 journal (original-date): vol (year) pages (continuous pagination).
+                 Non-continuous: Extra issue: → CSL issue (NOT number — number is
+                 docketNumber/prot. n.). When issue is set, force journal-style
+                 "vol, no. N (year) pages"; year from original-date else issued (year-date). -->
+            <group delimiter=" " prefix=": ">
+              <text variable="container-title" font-style="italic"/>
+              <choose>
+                <if variable="issue">
+                  <group delimiter=" ">
+                    <group delimiter=", ">
+                      <text variable="volume"/>
+                      <group delimiter=" ">
+                        <text term="issue" form="short"/>
+                        <text variable="issue"/>
+                      </group>
+                    </group>
+                    <group prefix="(" suffix=")">
+                      <text macro="year-date"/>
+                    </group>
+                    <choose>
+                      <if variable="page locator" match="all">
+                        <group delimiter=", ">
+                          <text variable="page"/>
+                          <text variable="locator"/>
+                        </group>
+                      </if>
+                      <else-if variable="page">
+                        <text variable="page"/>
+                      </else-if>
+                      <else-if variable="locator">
+                        <text variable="locator"/>
+                      </else-if>
+                    </choose>
+                  </group>
+                </if>
+                <else-if variable="original-date">
+                  <group delimiter=" ">
+                    <text variable="volume"/>
+                    <group prefix="(" suffix=")">
+                      <text macro="year-date"/>
+                    </group>
+                    <choose>
+                      <if variable="page locator" match="all">
+                        <group delimiter=", ">
+                          <text variable="page"/>
+                          <text variable="locator"/>
+                        </group>
+                      </if>
+                      <else-if variable="page">
+                        <text variable="page"/>
+                      </else-if>
+                      <else-if variable="locator">
+                        <text variable="locator"/>
+                      </else-if>
+                    </choose>
+                  </group>
+                </else-if>
+                <else>
+                  <group delimiter=":">
+                    <text variable="volume"/>
+                    <choose>
+                      <if variable="locator">
+                        <text variable="locator"/>
+                      </if>
+                      <else>
+                        <text variable="page"/>
+                      </else>
+                    </choose>
+                  </group>
+                </else>
+              </choose>
+            </group>
+          </if>
+          <else-if variable="publisher">
+            <text variable="publisher" prefix=": "/>
+            <text variable="page" prefix=", "/>
+            <text variable="locator" prefix=", "/>
+          </else-if>
+          <else>
+            <text variable="page" prefix=": "/>
+            <text variable="locator" prefix=": "/>
+          </else>
+        </choose>
+      </else>
+    </choose>
+    <text macro="hereafter"/>
+  </macro>
+
+  <macro name="webpage-first">
+    <group delimiter=", ">
+      <text macro="author-note"/>
+      <text macro="title-note"/>
+      <text variable="container-title" font-style="italic"/>
+      <text macro="publisher"/>
+      <text macro="date-text"/>
+    </group>
+    <group delimiter=" " prefix=", ">
+      <text value="accessed"/>
+      <date variable="accessed" form="text"/>
+    </group>
+    <text variable="URL" prefix=" "/>
+  </macro>
+
+
+  <macro name="classical-first">
+    <!-- Corpus / classical parts (Extra status on book or chapter).
+         First: full bibliographic form + (hereafter Label) + locator.
+         Subsequent: Label + locator (citation-subsequent via citation-label). -->
+    <choose>
+      <if variable="container-title">
+        <group delimiter=", ">
+          <text variable="title" font-style="italic"/>
+          <group delimiter=" ">
+            <text value="in"/>
+            <text variable="container-title" font-style="italic"/>
+          </group>
+          <text macro="collection"/>
+          <text macro="edition"/>
+          <text macro="editor-note"/>
+          <text macro="translator-note"/>
+        </group>
+      </if>
+      <else>
+        <group delimiter=", ">
+          <text variable="title" font-style="italic"/>
+          <text macro="collection"/>
+          <text macro="edition"/>
+          <text macro="editor-note"/>
+          <text macro="translator-note"/>
+        </group>
+      </else>
+    </choose>
+    <text macro="imprint-paren"/>
+    <text macro="point-locators" prefix=" "/>
+    <text macro="hereafter"/>
+  </macro>
+
+  <macro name="citation-first">
+    <choose>
+      <if type="article-journal article-magazine article-newspaper" match="any">
+        <text macro="article-first"/>
+      </if>
+      <else-if type="chapter paper-conference entry-encyclopedia entry-dictionary" match="any">
+        <choose>
+          <if variable="status">
+            <text macro="classical-first"/>
+          </if>
+          <else>
+            <text macro="chapter-first"/>
+          </else>
+        </choose>
+      </else-if>
+      <else-if type="book report" match="any">
+        <choose>
+          <if variable="status">
+            <text macro="classical-first"/>
+          </if>
+          <else>
+            <text macro="book-first"/>
+          </else>
+        </choose>
+      </else-if>
+      <else-if type="thesis">
+        <text macro="thesis-first"/>
+      </else-if>
+      <else-if type="manuscript legislation bill" match="any">
+        <text macro="manuscript-first"/>
+      </else-if>
+      <else-if type="legal_case">
+        <text macro="case-first"/>
+      </else-if>
+      <else-if type="webpage post post-weblog" match="any">
+        <text macro="webpage-first"/>
+      </else-if>
+      <else-if type="speech interview" match="any">
+        <group delimiter=", ">
+          <text macro="author-note"/>
+          <text macro="title-note"/>
+          <text variable="event-title"/>
+          <text macro="date-text"/>
+        </group>
+      </else-if>
+      <else>
+        <text macro="book-first"/>
+      </else>
+    </choose>
+    <!-- Skip note on dual-pub path: references already holds linking text; Zotero may
+         still dump leftover Extra keys through note. -->
+    <choose>
+      <if variable="references">
+      </if>
+      <else-if variable="note">
+        <text variable="note" prefix="; "/>
+      </else-if>
+    </choose>
+  </macro>
+
+  <macro name="citation-subsequent">
+    <!-- Classical Corpus (chapter/book + Extra status):
+         Short sigla (X/VI/Dig./Inst./…): italic citation-label (Extra <i>) + bare locator.
+         Decretum Gratiani (has author): locator alone — do not reprint label.
+         Smoke locators must be bare when label is announced (avoids VI. VI / Dig. Dig.).
+         CIC/PE/DC/etc. keep the citation-label branch below.
+         Subsequent never falls back to item page (no locator → no dump). -->
+    <choose>
+      <if type="chapter book" match="any">
+        <choose>
+          <if variable="status">
+            <choose>
+              <if variable="author">
+                <!-- Decretum Gratiani path -->
+                <choose>
+                  <if variable="locator">
+                    <text variable="locator"/>
+                  </if>
+                  <else>
+                    <text variable="citation-label"/>
+                  </else>
+                </choose>
+              </if>
+              <else>
+                <group delimiter=" ">
+                  <text variable="citation-label"/>
+                  <text variable="locator"/>
+                </group>
+              </else>
+            </choose>
+          </if>
+          <else>
+            <!-- ordinary chapter/book subsequent -->
+            <group delimiter=", ">
+              <text macro="author-short"/>
+              <choose>
+                <if disambiguate="true">
+                  <text macro="title-short"/>
+                </if>
+              </choose>
+              <text macro="locator-label-only"/>
+            </group>
+          </else>
+        </choose>
+      </if>
+      <else-if variable="citation-label">
+        <group delimiter=" ">
+          <text variable="citation-label"/>
+          <text macro="locator-label-only"/>
+        </group>
+      </else-if>
+      <else-if type="legal_case" variable="title">
+        <!-- civil subsequent: case name + locator (no page dump) -->
+        <group delimiter=", ">
+          <text variable="title"/>
+          <text macro="locator-label-only"/>
+        </group>
+      </else-if>
+      <else-if type="legal_case">
+        <!-- Eccles subsequent (no caseName): event-title, c. Surname, date decided, locator.
+             Omit missing; no reporter/page dump. Civil with title uses branch above. -->
+        <group delimiter=", ">
+          <text variable="event-title"/>
+          <text macro="ponens"/>
+          <text macro="date-text"/>
+          <text macro="locator-label-only"/>
+        </group>
+      </else-if>
+      <else-if type="manuscript legislation" match="any">
+        <group delimiter=" ">
+          <choose>
+            <if variable="title" form="short">
+              <text variable="title" form="short" font-style="italic"/>
+            </if>
+            <else>
+              <text variable="title" font-style="italic"/>
+            </else>
+          </choose>
+          <text macro="locator-label-only"/>
+        </group>
+      </else-if>
+      <else>
+        <group delimiter=", ">
+          <text macro="author-short"/>
+          <choose>
+            <if disambiguate="true">
+              <text macro="title-short"/>
+            </if>
+          </choose>
+          <text macro="locator-label-only"/>
+        </group>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- ========== BIBLIOGRAPHY MACROS ========== -->
+  <macro name="bib-article">
+    <group delimiter=". ">
+      <text macro="author-bib"/>
+      <text macro="title-bib"/>
+      <group delimiter=" ">
+        <text macro="container-title"/>
+        <text variable="volume"/>
+        <group prefix="(" suffix=")">
+          <text macro="year-date"/>
+        </group>
+        <text variable="page"/>
+      </group>
+    </group>
+  </macro>
+
+  <macro name="bib-chapter">
+    <group delimiter=". ">
+      <text macro="author-bib"/>
+      <text macro="title-bib"/>
+      <group delimiter=", ">
+        <group delimiter=" ">
+          <text value="In"/>
+          <text macro="container-title"/>
+        </group>
+        <text macro="editor-bib"/>
+        <group delimiter=":">
+          <text variable="volume"/>
+          <text variable="page"/>
+        </group>
+      </group>
+    </group>
+  </macro>
+
+  <macro name="bib-book">
+    <group delimiter=". ">
+      <text macro="author-bib"/>
+      <text macro="title-bib"/>
+      <text macro="collection"/>
+      <text macro="edition"/>
+      <group delimiter=", ">
+        <text macro="publisher"/>
+        <text macro="issued-year"/>
+      </group>
+    </group>
+  </macro>
+
+  <macro name="bib-manuscript">
+    <group delimiter=". ">
+      <choose>
+        <if variable="authority">
+          <text variable="authority"/>
+        </if>
+        <else>
+          <text macro="author-bib"/>
+        </else>
+      </choose>
+      <group delimiter=" ">
+        <text variable="genre" text-case="capitalize-first"/>
+        <text variable="title" font-style="italic"/>
+        <text variable="reviewed-title"/>
+      </group>
+      <text macro="date-text"/>
+      <choose>
+        <if variable="container-title">
+          <choose>
+            <if variable="references">
+              <choose>
+                <if variable="original-title collection-title" match="none">
+                  <group delimiter=" ">
+                    <text variable="references"/>
+                    <text macro="periodical-jurist"/>
+                  </group>
+                </if>
+                <else>
+                  <text macro="periodical-jurist"/>
+                </else>
+              </choose>
+            </if>
+            <else>
+              <text macro="periodical-jurist"/>
+            </else>
+          </choose>
+        </if>
+        <else-if variable="original-title">
+        </else-if>
+        <else>
+          <group delimiter=", ">
+            <text macro="publisher"/>
+            <text macro="issued-year"/>
+          </group>
+        </else>
+      </choose>
+    </group>
+    <text macro="secondary-imprint"/>
+  </macro>
+
+  <macro name="bib-case">
+    <!-- CUA §14 bibliography: periods; medium capitalize-first; reporter roman; vol: pages. -->
+    <group delimiter=". ">
+      <choose>
+        <if variable="authority">
+          <text variable="authority"/>
+        </if>
+        <else>
+          <names variable="author">
+            <name and="text" delimiter=", "/>
+          </names>
+        </else>
+      </choose>
+      <group delimiter=" ">
+        <text variable="medium" text-case="capitalize-first"/>
+        <text macro="ponens"/>
+      </group>
+      <text variable="jurisdiction" font-style="italic"/>
+      <text variable="genre" font-style="italic"/>
+      <text variable="title" font-style="italic"/>
+      <text variable="number" prefix="Prot. n. "/>
+      <text macro="date-text"/>
+      <group delimiter=" ">
+        <text variable="container-title" font-style="italic"/>
+        <choose>
+          <if variable="issue">
+            <!-- Non-continuous: Extra issue → CSL issue; journal-style; year-date. -->
+            <group delimiter=" ">
+              <group delimiter=", ">
+                <text variable="volume"/>
+                <group delimiter=" ">
+                  <text term="issue" form="short"/>
+                  <text variable="issue"/>
+                </group>
+              </group>
+              <group prefix="(" suffix=")">
+                <text macro="year-date"/>
+              </group>
+              <text variable="page"/>
+            </group>
+          </if>
+          <else-if variable="original-date">
+            <group delimiter=" ">
+              <text variable="volume"/>
+              <group prefix="(" suffix=")">
+                <text macro="year-date"/>
+              </group>
+              <text variable="page"/>
+            </group>
+          </else-if>
+          <else>
+            <group delimiter=":">
+              <text variable="volume"/>
+              <text variable="page"/>
+            </group>
+          </else>
+        </choose>
+      </group>
+    </group>
+  </macro>
+
+  <macro name="bibliography-body">
+    <choose>
+      <if type="article-journal article-magazine article-newspaper" match="any">
+        <text macro="bib-article"/>
+      </if>
+      <else-if type="chapter paper-conference entry-encyclopedia entry-dictionary" match="any">
+        <text macro="bib-chapter"/>
+      </else-if>
+      <else-if type="book report thesis" match="any">
+        <text macro="bib-book"/>
+      </else-if>
+      <else-if type="manuscript legislation bill" match="any">
+        <text macro="bib-manuscript"/>
+      </else-if>
+      <else-if type="legal_case">
+        <text macro="bib-case"/>
+      </else-if>
+      <else>
+        <text macro="bib-book"/>
+      </else>
+    </choose>
+    <text value="."/>
+  </macro>
+
+  <!-- ========== CITATION / BIBLIOGRAPHY ========== -->
+  <citation et-al-min="4" et-al-use-first="1" disambiguate-add-title="true" disambiguate-add-year-suffix="true" collapse="citation-number">
+    <sort>
+      <key macro="author-note"/>
+      <key variable="issued"/>
+    </sort>
+    <layout suffix="." delimiter="; ">
+      <choose>
+        <if position="ibid-with-locator">
+          <group delimiter=", ">
+            <text term="ibid" text-case="capitalize-first"/>
+            <text macro="locator-label-only"/>
+          </group>
+        </if>
+        <else-if position="ibid">
+          <text term="ibid" text-case="capitalize-first"/>
+        </else-if>
+        <else-if position="subsequent">
+          <text macro="citation-subsequent"/>
+        </else-if>
+        <else>
+          <text macro="citation-first"/>
+        </else>
+      </choose>
+    </layout>
+  </citation>
+
+  <bibliography hanging-indent="true" et-al-min="4" et-al-use-first="1" subsequent-author-substitute="________" subsequent-author-substitute-rule="complete-all">
+    <sort>
+      <key variable="status"/>
+      <key macro="author-bib"/>
+      <key variable="title"/>
+    </sort>
+    <layout>
+      <text macro="bibliography-body"/>
+    </layout>
+  </bibliography>
+</style>
