@@ -119,13 +119,20 @@
 
   <macro name="author-short">
     <names variable="author">
-      <name form="short" and="text" delimiter=", "/>
+      <name form="short" and="text" delimiter=", " delimiter-precedes-last="never"/>
       <substitute>
         <names variable="editor">
-          <name form="short" and="text" delimiter=", "/>
+          <name form="short" and="text" delimiter=", " delimiter-precedes-last="never"/>
         </names>
-        <text variable="citation-label"/>
-        <text variable="title" form="short"/>
+        <choose><if variable="citation-label"><text variable="citation-label"/></if></choose>
+        <choose>
+          <if type="bill book graphic legal_case legislation manuscript motion_picture report song" match="any">
+            <text variable="title" form="short" font-style="italic"/>
+          </if>
+          <else>
+            <text variable="title" form="short" quotes="true"/>
+          </else>
+        </choose>
       </substitute>
     </names>
   </macro>
@@ -204,7 +211,7 @@
 
   <macro name="title-bib">
     <choose>
-      <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+      <if type="bill book graphic legal_case legislation manuscript motion_picture report song" match="any">
         <text variable="title" font-style="italic"/>
       </if>
       <else>
@@ -238,6 +245,40 @@
     </group>
   </macro>
 
+  <!-- Multi-volume book part, e.g. vol. I/1 or vol. 9. Called only from book-first / bib-book. -->
+  <!-- Bibliography form (CUA 13.2): "Vol. 7." / "6 vols." -->
+  <macro name="volume-book-bib">
+    <choose>
+      <if variable="volume">
+        <group delimiter=" ">
+          <text term="volume" form="short" text-case="capitalize-first"/>
+          <text variable="volume"/>
+        </group>
+      </if>
+      <else>
+        <text macro="volume-book"/>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="volume-book">
+    <choose>
+      <if variable="volume">
+        <group delimiter=" ">
+          <text term="volume" form="short"/>
+          <text variable="volume"/>
+        </group>
+      </if>
+      <!-- Whole multi-volume set (no volume): N vols. -->
+      <else-if type="book" variable="number-of-volumes" match="all">
+        <group delimiter=" ">
+          <number variable="number-of-volumes"/>
+          <text term="volume" form="short" plural="true"/>
+        </group>
+      </else-if>
+    </choose>
+  </macro>
+
   <!-- ========== DATES ========== -->
   <macro name="date-text">
     <date variable="issued" form="text"/>
@@ -259,9 +300,29 @@
   </macro>
 
   <macro name="issued-year">
-    <date variable="issued">
-      <date-part name="year"/>
-    </date>
+    <!-- Whole multi-volume set: year range (Zotero passes the end year as season). -->
+    <choose>
+      <if type="book" variable="number-of-volumes" match="all">
+        <choose>
+          <if variable="volume">
+            <date variable="issued">
+              <date-part name="year"/>
+            </date>
+          </if>
+          <else>
+            <date variable="issued">
+              <date-part name="year"/>
+              <date-part name="month" form="numeric" prefix="–"/>
+            </date>
+          </else>
+        </choose>
+      </if>
+      <else>
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
+      </else>
+    </choose>
   </macro>
 
   <!-- ========== IMPRINT ========== -->
@@ -405,6 +466,28 @@
           <text variable="citation-label" prefix=" "/>
         </group>
       </if>
+      <!-- Fallback: whole set or volume of a set announces its Short Title (italic: book default; roman parts tagged in data) -->
+      <else-if position="first" type="book" variable="title-short" match="all">
+        <choose>
+          <if variable="status volume" match="none">
+            <choose>
+              <if variable="number-of-volumes">
+            <group prefix=" (" suffix=")">
+              <text value="hereafter"/>
+              <text variable="title-short" prefix=" " font-style="italic"/>
+            </group>
+              </if>
+            </choose>
+          </if>
+          <else-if variable="status" match="none">
+            <!-- volume of a set -->
+            <group prefix=" (" suffix=")">
+              <text value="hereafter"/>
+              <text variable="title-short" prefix=" " font-style="italic"/>
+            </group>
+          </else-if>
+        </choose>
+      </else-if>
     </choose>
   </macro>
 
@@ -444,13 +527,15 @@
       <text macro="author-note"/>
       <text macro="title-note"/>
       <text macro="collection"/>
-      <text macro="edition"/>
+      <text macro="volume-book"/>
       <choose>
         <if variable="author">
           <text macro="editor-note"/>
           <text macro="translator-note"/>
         </if>
       </choose>
+      <!-- Turabian/CMOS: editor before edition -->
+      <text macro="edition"/>
     </group>
     <text macro="imprint-paren"/>
     <text macro="point-locators" prefix=" "/>
@@ -872,7 +957,7 @@
       </if>
       <else-if type="chapter paper-conference entry-encyclopedia entry-dictionary" match="any">
         <choose>
-          <if variable="status">
+          <if variable="status citation-label" match="all">
             <text macro="classical-first"/>
           </if>
           <else>
@@ -882,7 +967,7 @@
       </else-if>
       <else-if type="book report" match="any">
         <choose>
-          <if variable="status">
+          <if variable="status citation-label" match="all">
             <text macro="classical-first"/>
           </if>
           <else>
@@ -914,15 +999,8 @@
         <text macro="book-first"/>
       </else>
     </choose>
-    <!-- Skip note on dual-pub path: references already holds linking text; Zotero may
-         still dump leftover Extra keys through note. -->
-    <choose>
-      <if variable="references">
-      </if>
-      <else-if variable="note">
-        <text variable="note" prefix="; "/>
-      </else-if>
-    </choose>
+    <!-- Do not print CSL note. Zotero maps leftover Extra cataloguing prose
+         there; type-specific content uses structured Extra keys instead. -->
   </macro>
 
   <macro name="citation-subsequent">
@@ -937,7 +1015,15 @@
         <choose>
           <if variable="status">
             <choose>
-              <if variable="author">
+              <!-- Status book without a citation-label (e.g. magisterium collection): name, short title, locator -->
+              <if variable="citation-label" match="none">
+                <group delimiter=", ">
+                  <text macro="author-short"/>
+                  <text macro="title-short"/>
+                  <text macro="locator-label-only"/>
+                </group>
+              </if>
+              <else-if variable="author">
                 <!-- Decretum Gratiani path -->
                 <choose>
                   <if variable="locator">
@@ -947,7 +1033,7 @@
                     <text variable="citation-label"/>
                   </else>
                 </choose>
-              </if>
+              </else-if>
               <else>
                 <group delimiter=" ">
                   <text variable="citation-label"/>
@@ -957,13 +1043,24 @@
             </choose>
           </if>
           <else>
-            <!-- ordinary chapter/book subsequent -->
+            <!-- ordinary chapter/book subsequent.
+                 Books with a volume always print the short title so parts of
+                 the same work stay distinct in citeproc-js (the citation
+                 attribute disambiguate-add-title is not standard CSL).
+                 Other books/chapters still use disambiguate="true". -->
             <group delimiter=", ">
               <text macro="author-short"/>
               <choose>
-                <if disambiguate="true">
+                <if type="book" variable="volume">
                   <text macro="title-short"/>
                 </if>
+                <!-- Whole multi-volume set: short title keeps it distinct from its volumes -->
+                <else-if type="book" variable="number-of-volumes" match="all">
+                  <text macro="title-short"/>
+                </else-if>
+                <else-if disambiguate="true">
+                  <text macro="title-short"/>
+                </else-if>
               </choose>
               <text macro="locator-label-only"/>
             </group>
@@ -1057,8 +1154,35 @@
   <macro name="bib-book">
     <group delimiter=". ">
       <text macro="author-bib"/>
-      <text macro="title-bib"/>
-      <text macro="collection"/>
+      <choose>
+        <if variable="collection-title">
+          <text macro="title-bib"/>
+          <!-- CUA 13.2 bibliography: "Title. 6 vols. Place: Publisher, 1966-1987." / "Title. Vol. 7. Place…" -->
+          <group delimiter=". ">
+            <text macro="collection"/>
+            <text macro="volume-book-bib"/>
+          </group>
+        </if>
+        <else>
+          <group delimiter=". ">
+            <text macro="title-bib"/>
+            <text macro="volume-book-bib"/>
+          </group>
+        </else>
+      </choose>
+      <!-- CUA 13.2 / CMOS: "Title. 5 vols. Edited by X. 2nd ed." (editor only when an author leads a book entry) -->
+      <choose>
+        <if type="book" variable="author" match="all">
+          <names variable="editor">
+            <label form="verb" text-case="capitalize-first" suffix=" "/>
+            <name and="text" delimiter=", " delimiter-precedes-last="never"/>
+          </names>
+          <names variable="translator">
+            <label form="verb" text-case="capitalize-first" suffix=" "/>
+            <name and="text" delimiter=", " delimiter-precedes-last="never"/>
+          </names>
+        </if>
+      </choose>
       <text macro="edition"/>
       <group delimiter=", ">
         <text macro="publisher"/>
@@ -1082,7 +1206,15 @@
         <text variable="title" font-style="italic"/>
         <text variable="reviewed-title"/>
       </group>
-      <text macro="date-text"/>
+      <!-- Date only when no imprint follows (imprint already carries the year). -->
+      <choose>
+        <if variable="container-title original-title" match="any">
+          <text macro="date-text"/>
+        </if>
+        <else-if variable="publisher publisher-place" match="none">
+          <text macro="date-text"/>
+        </else-if>
+      </choose>
       <choose>
         <if variable="container-title">
           <choose>
@@ -1203,7 +1335,7 @@
   </macro>
 
   <!-- ========== CITATION / BIBLIOGRAPHY ========== -->
-  <citation et-al-min="4" et-al-use-first="1" disambiguate-add-title="true" disambiguate-add-year-suffix="true" collapse="citation-number">
+  <citation et-al-min="4" et-al-use-first="1" disambiguate-add-title="true" collapse="citation-number">
     <sort>
       <key macro="author-note"/>
       <key variable="issued"/>

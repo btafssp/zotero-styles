@@ -136,7 +136,7 @@
 
   <macro name="contributors-note">
     <names variable="author">
-      <name initialize-with="." and="text" delimiter=", " delimiter-precedes-last="never">
+      <name initialize-with="." and="text" delimiter=", ">
         <name-part name="family" font-variant="small-caps"/>
       </name>
       <substitute>
@@ -159,7 +159,7 @@
 
   <macro name="contributors-note-no-substitute">
     <names variable="author">
-      <name initialize-with="." and="text" delimiter=", " delimiter-precedes-last="never">
+      <name initialize-with="." and="text" delimiter=", ">
         <name-part name="family" font-variant="small-caps"/>
       </name>
     </names>
@@ -172,11 +172,11 @@
       </name>
       <substitute>
         <names variable="editor">
-          <name form="short">
+          <name form="short" and="text" delimiter=", ">
             <name-part name="family" font-variant="small-caps"/>
           </name>
         </names>
-        <text variable="citation-label"/>
+        <choose><if variable="citation-label"><text variable="citation-label"/></if></choose>
         <text variable="title" form="short" font-style="italic"/>
       </substitute>
     </names>
@@ -184,12 +184,12 @@
 
   <macro name="contributors-bib">
     <names variable="author">
-      <name name-as-sort-order="first" initialize-with="." and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="never">
+      <name name-as-sort-order="first" initialize-with="." and="text" sort-separator=", " delimiter=", ">
         <name-part name="family" font-variant="small-caps"/>
       </name>
       <substitute>
         <names variable="editor">
-          <name name-as-sort-order="first" initialize-with="." sort-separator=", ">
+          <name name-as-sort-order="first" initialize-with="." and="text" sort-separator=", " delimiter=", ">
             <name-part name="family" font-variant="small-caps"/>
           </name>
           <label form="short" prefix=" (" suffix=")"/>
@@ -230,6 +230,18 @@
     </choose>
   </macro>
 
+  <macro name="sort-doc-date">
+    <choose>
+      <if variable="status">
+        <date variable="issued">
+          <date-part name="year"/>
+          <date-part name="month" form="numeric-leading-zeros" prefix="-"/>
+          <date-part name="day" form="numeric-leading-zeros" prefix="-"/>
+        </date>
+      </if>
+    </choose>
+  </macro>
+
   <macro name="title-short-note">
     <choose>
       <if type="article-journal article-magazine article-newspaper chapter paper-conference" match="any">
@@ -263,9 +275,28 @@
     <group delimiter=", ">
       <text variable="publisher-place"/>
       <text variable="publisher"/>
-      <date variable="issued">
-        <date-part name="year"/>
-      </date>
+      <choose>
+        <if type="book" variable="number-of-volumes" match="all">
+          <choose>
+            <if variable="volume">
+              <date variable="issued">
+                <date-part name="year"/>
+              </date>
+            </if>
+            <else>
+              <date variable="issued">
+                <date-part name="year"/>
+                <date-part name="month" form="numeric" prefix="–"/>
+              </date>
+            </else>
+          </choose>
+        </if>
+        <else>
+          <date variable="issued">
+            <date-part name="year"/>
+          </date>
+        </else>
+      </choose>
     </group>
   </macro>
 
@@ -299,6 +330,13 @@
           <text variable="volume"/>
         </group>
       </if>
+      <!-- Whole multi-volume set (no volume): N vols. -->
+      <else-if type="book" variable="number-of-volumes" match="all">
+        <group delimiter=" ">
+          <number variable="number-of-volumes"/>
+          <text term="volume" form="short" plural="true"/>
+        </group>
+      </else-if>
     </choose>
   </macro>
 
@@ -572,6 +610,22 @@
              (separate "=" + label was rendering as italic "=" / roman STEM / italic year). -->
         <text variable="citation-label" prefix=" (=" suffix=")"/>
       </if>
+      <!-- Fallback: whole set or volume of a set announces its Short Title (italic: book default; roman parts tagged in data) -->
+      <else-if type="book" variable="title-short" match="all">
+        <choose>
+          <if variable="status volume" match="none">
+            <choose>
+              <if variable="number-of-volumes">
+            <group prefix=" (=" suffix=")"><text variable="title-short" font-style="italic"/></group>
+              </if>
+            </choose>
+          </if>
+          <else-if variable="status" match="none">
+            <!-- volume of a set -->
+            <group prefix=" (=" suffix=")"><text variable="title-short" font-style="italic"/></group>
+          </else-if>
+        </choose>
+      </else-if>
     </choose>
   </macro>
 
@@ -629,7 +683,10 @@
       <text macro="incipit"/>
       <text macro="editor-after-title"/>
       <text macro="edition"/>
-      <text variable="collection-title"/>
+      <group delimiter=" ">
+        <text variable="collection-title"/>
+        <text variable="collection-number"/>
+      </group>
       <text macro="volume-book"/>
       <text macro="imprint-stc"/>
       <text variable="page"/>
@@ -990,13 +1047,13 @@
       <if type="article-journal article-magazine article-newspaper" match="any">
         <text macro="article-first"/>
       </if>
-      <else-if type="chapter" variable="status">
+      <else-if type="chapter" variable="status citation-label" match="all">
         <text macro="classical-first"/>
       </else-if>
       <else-if type="chapter paper-conference" match="any">
         <text macro="chapter-first"/>
       </else-if>
-      <else-if type="book" variable="status">
+      <else-if type="book" variable="status citation-label" match="all">
         <text macro="classical-first"/>
       </else-if>
       <else-if type="book" match="any">
@@ -1023,7 +1080,7 @@
   <!-- ===== SUBSEQUENT ===== -->
   <macro name="subsequent-cite">
     <choose>
-      <if type="chapter book" variable="status">
+      <if type="chapter book" variable="status citation-label" match="all">
         <text macro="classical-subsequent"/>
       </if>
       <else-if variable="citation-label">
@@ -1210,8 +1267,22 @@
           <text variable="title" font-style="italic"/>
           <text macro="editor-after-title"/>
           <text macro="edition"/>
-          <text variable="collection-title"/>
+          <group delimiter=" ">
+            <text variable="collection-title"/>
+            <text variable="collection-number"/>
+          </group>
+          <choose>
+            <if variable="volume">
+              <text macro="volume-book"/>
+            </if>
+          </choose>
           <text macro="imprint-stc"/>
+          <!-- USP bibliography: whole set "…, Typis polyglottis Vaticanis, 1923-1939, 9 vols." -->
+          <choose>
+            <if variable="volume" match="none">
+              <text macro="volume-book"/>
+            </if>
+          </choose>
         </group>
       </else>
     </choose>
@@ -1237,7 +1308,7 @@
         <else>
           <text macro="first-cite"/>
           <choose>
-            <if type="chapter book" variable="status">
+            <if type="chapter book" variable="status citation-label" match="all">
               <!-- classical: SPACE before locator; Word Suffix = bare edition vol:page -->
               <text variable="locator" prefix=" "/>
             </if>
@@ -1268,9 +1339,11 @@
       <key variable="status"/>
       <key variable="event-title"/>
       <key variable="authority"/>
-      <key variable="issued"/>
+      <!-- USP 2.1: alphabetical by author, then title; date first only for documents (status) -->
+      <key macro="sort-doc-date"/>
       <key macro="contributors-bib"/>
       <key variable="title"/>
+      <key variable="issued"/>
     </sort>
     <layout suffix=".">
       <text macro="bib-body"/>
